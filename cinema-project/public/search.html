@@ -1,16 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rechercher des Films</title>
-  <link rel="stylesheet" href="../styles/search.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Films</title>
+    <link rel="stylesheet" href="../src/shared/style.css">
 </head>
+
 <body>
-  <h1>Recherche de Films</h1>
-  <input type="text" id="search-bar" placeholder="Recherchez un film...">
-  <div id="search-results"></div>
-  <button id="load-more">Charger plus de résultats</button>
-  <script src="../dist/search.bundle.js" type="module"></script>
+    <header>
+        <img src="logo_cinéma.png" alt="Logo" class="logo">
+        <h1>CinéScope</h1>
+        <button class="hamburger" aria-label="Menu" aria-expanded="false">
+            <span class="line"></span>
+            <span class="line"></span>
+        </button>
+        <nav class="nav-menu hidden">
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="search.html">Rechercher</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Recherche de Films</h2>
+        <input type="text" id="search-bar" placeholder="Recherchez un film...">
+        <div id="movies-container"></div>
+        <button id="load-more">Charger plus de résultats</button>
+    </main>
+    <footer>
+        <p>© 2025 - CinéScope. Tous droits réservés.</p>
+    </footer>
+    <script src="../dist/search.bundle.js" type="module"></script>
 </body>
+
 </html>
