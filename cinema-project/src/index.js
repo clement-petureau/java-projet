@@ -11,7 +11,7 @@ function displayTrendingMovies(movies) {
     movieDiv.innerHTML = `
       <img src="${movie.Poster}" alt="${movie.Title}">
       <h3>${movie.Title}</h3>
-      <a href="movie.html?id=${movie.imdbID}">En savoir plus</a>
+      <a href="movie.html?id=${movie.imdbID}">More information</a>
     `;
     moviesContainer.appendChild(movieDiv);
   });
