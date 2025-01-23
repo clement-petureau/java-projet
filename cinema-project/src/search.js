@@ -1,33 +1,66 @@
 import { fetchMovies } from './shared/api.js';
 
 let page = 1;
+const searchBar = document.getElementById('search-bar');
+const searchResults = document.getElementById('movies-container');
+const loadMoreButton = document.getElementById('load-more');
 
-async function searchMovies(query) {
-  const resultsContainer = document.getElementById('search-results');
-  const data = await fetchMovies(query, page);
-  data.Search.forEach(movie => {
-    const resultDiv = document.createElement('div');
-    resultDiv.innerHTML = `
+function displayMovies(movies) {
+  movies.forEach((movie) => {
+    const movieDiv = document.createElement('div');
+    movieDiv.className = 'movie';
+    movieDiv.innerHTML = `
       <img src="${movie.Poster}" alt="${movie.Title}">
-      <h2>${movie.Title}</h2>
+      <h3>${movie.Title}</h3>
       <a href="movie.html?id=${movie.imdbID}">En savoir plus</a>
     `;
-    resultsContainer.appendChild(resultDiv);
+    searchResults.appendChild(movieDiv);
   });
 }
 
-document.getElementById('search-bar').addEventListener('input', (e) => {
-  const query = e.target.value;
-  if (query.length > 2) {
-    document.getElementById('search-results').innerHTML = '';
-    searchMovies(query);
+async function loadMovies() {
+  const query = searchBar.value.trim();
+  if (!query) {
+    alert('Veuillez entrer un terme de recherche.');
+    return;
+  }
+  const data = await fetchMovies(query, page);
+  if (data && data.Search) {
+    displayMovies(data.Search);
+  } else {
+    alert('Aucun film trouvé ou une erreur est survenue.');
+  }
+}
+
+loadMoreButton.addEventListener('click', () => {
+  page++;
+  loadMovies();
+});
+
+searchBar.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    searchResults.innerHTML = '';
+    page = 1;
+    loadMovies();
   }
 });
 
-document.getElementById('load-more').addEventListener('click', () => {
-  const query = document.getElementById('search-bar').value;
-  if (query.length > 2) {
-    page++;
-    searchMovies(query);
-  }
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    hamburger.addEventListener('click', () => {
+        const isExpanded = hamburger.getAttribute('aria-expanded') === 'true' || false;
+        hamburger.setAttribute('aria-expanded', !isExpanded);
+        hamburger.classList.toggle('open');
+        navMenu.classList.toggle('active');
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+            hamburger.classList.remove('open');
+            navMenu.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+    });
 });

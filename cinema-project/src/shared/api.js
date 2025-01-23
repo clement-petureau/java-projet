@@ -1,14 +1,28 @@
-const API_KEY = 'votre_api_key'; // Remplacez par votre clé OMDb.
-const BASE_URL = 'https://www.omdbapi.com/';
+const API_KEY = 'ba646041'; 
+
+async function apiRequest(params) {
+  const url = `https://www.omdbapi.com/?apikey=${API_KEY}&${params}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+    const data = await response.json();
+    if (data.Response === "True") {
+      return data;
+    } else {
+      throw new Error(`Erreur API : ${data.Error}`);
+    }
+  } catch (error) {
+    console.error('Erreur dans apiRequest :', error.message);
+    return null; 
+  }
+}
 
 export async function fetchMovies(query, page = 1) {
-  const url = `${BASE_URL}?apikey=${API_KEY}&s=${query}&page=${page}`;
-  const response = await fetch(url);
-  return response.json();
+  return apiRequest(`s=${query}&page=${page}`);
 }
 
 export async function fetchMovieDetails(id) {
-  const url = `${BASE_URL}?apikey=${API_KEY}&i=${id}&plot=full`;
-  const response = await fetch(url);
-  return response.json();
+  return apiRequest(`i=${id}&plot=full`);
 }
