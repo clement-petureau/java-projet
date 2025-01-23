@@ -1,10 +1,10 @@
 import { fetchMovies } from './shared/api.js';
 
-let page = 1;
+let page = 1; 
 const moviesContainer = document.getElementById('movies-container');
 const loadMoreButton = document.getElementById('load-more');
 
-function displayTrendingMovies(movies) {
+function displayMovies(movies) {
   movies.forEach((movie) => {
     const movieDiv = document.createElement('div');
     movieDiv.className = 'movie';
@@ -18,39 +18,57 @@ function displayTrendingMovies(movies) {
 }
 
 async function loadTrendingMovies() {
-  const data = await fetchMovies('trending', page);
+  try {
+    const data = await fetchMovies('harry potter', page);
+    console.log('Films tendance reçus:', data); 
 
-  if (data && data.Search) {
-    displayTrendingMovies(data.Search);
-  } else {
-    alert('Aucun film trouvé ou une erreur est survenue.');
+    if (data && data.Search) {
+      displayMovies(data.Search.slice(0, 3)); 
+    } else {
+      alert('Aucun film tendance trouvé.');
+    }
+  } catch (error) {
+    console.error('Erreur lors du chargement des films tendance:', error);
+    alert('Impossible de charger les films tendance.');
   }
 }
 
+async function loadMoviesFrom2024() {
+  const data = await fetchMovies('2024', page, { year: 2024 }); 
+
+  if (data && data.Search) {
+    displayMovies(data.Search);
+  } else {
+    alert('Aucun film de 2024 trouvé ou une erreur est survenue.');
+  }
+}
+
+
 loadMoreButton.addEventListener('click', () => {
-  page++;
-  loadTrendingMovies();
+  page++; 
+  loadMoviesFrom2024();
 });
 
 loadTrendingMovies();
 
 document.addEventListener('DOMContentLoaded', () => {
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
+  const hamburger = document.querySelector('.hamburger');
+  const navMenu = document.querySelector('.nav-menu');
 
-    hamburger.addEventListener('click', () => {
-        const isExpanded = hamburger.getAttribute('aria-expanded') === 'true' || false;
-        hamburger.setAttribute('aria-expanded', !isExpanded);
+  hamburger.addEventListener('click', () => {
+    const isExpanded = hamburger.getAttribute('aria-expanded') === 'true' || false;
+    hamburger.setAttribute('aria-expanded', !isExpanded);
 
-        hamburger.classList.toggle('open');
-        navMenu.classList.toggle('active');
-    });
+    hamburger.classList.toggle('open');
+    navMenu.classList.toggle('active');
+  });
 
-    document.addEventListener('click', (event) => {
-        if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
-            hamburger.classList.remove('open');
-            navMenu.classList.remove('active');
-            hamburger.setAttribute('aria-expanded', 'false');
-        }
-    });
+  document.addEventListener('click', (event) => {
+    if (!hamburger.contains(event.target) && !navMenu.contains(event.target)) {
+      hamburger.classList.remove('open');
+      navMenu.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
+    }
+  });
 });
+
